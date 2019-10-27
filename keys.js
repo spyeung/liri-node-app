@@ -6,5 +6,5 @@ exports.spotify = {
 };
 
 exports.omdb = {
-  api = "34ea7daf",
+  api: process.env.OMDB_API
 }
