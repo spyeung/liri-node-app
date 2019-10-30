@@ -4,15 +4,25 @@ const axios = require('axios');
 const keys = require("./keys.js");
 const Spotify = require('node-spotify-api');
 const spotify = new Spotify(keys.spotify);
+const omdb = new omdb(keys.omdb);
 
 var command = process.argv[2];
 var searchTerm = process.argv.splice(3).join(" ");
+var fs = require('fs');
+var data = command + searchTerm;
+var divider = "\n----------------------\n\n"
 
-// RunCommand(command, searchTerm);
+fs.appendFile('log.txt', data, 'utf8',
+    function(err){
+        if(err) throw err;
+        console.log("Data is appended to file")
+    });
+
+RunCommand(command, searchTerm);
 
 // RunCommand("spotify-this-song", "My heart will go on");
 // RunCommand("movie-this", "Land Before Time");
-RunCommand("concert-this", "");
+// RunCommand("concert-this", "");
 // RunCommand("do-what-it-says");
 
 function RunCommand(command, searchTerm) {
@@ -55,6 +65,21 @@ function spotify_this_song(song) {
 }
 
 function movie_this(movie) {
+    if(!movie){
+        movie = "Avenger"
+    }
+    axios.get("http://www.omdbapi.com/?apikey=omdb&=t" + movie )
+        .then(function(response){
+
+            for(var i = 0; i < response.data.length; i++){
+
+                console.log(response.data[i].title)
+                console.log(response.data[i].released)
+                console.log(response.data[i].rated)
+
+                console.log(response)
+            }
+        })
     console.log("Searching for", movie)
 
 }
